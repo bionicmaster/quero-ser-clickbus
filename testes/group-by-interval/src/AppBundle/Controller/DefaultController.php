@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Form\NumberType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,12 +42,11 @@ class DefaultController extends Controller
             {
                 $set[] = '[' . implode(',', $group) . ']';
             }
-            $group = implode(', ', $set);
 
             $result['range_input']   = $data['rango'];
             $result['sorted_input']  = $data['arreglo'];
             $result['sorted_output'] = implode(', ', $manager->getSorted());
-            $result['grouped_output'] = implode(', ', $group);
+            $result['grouped_output'] = implode(', ', $set);
         }
 
         return $this->render('AppBundle::number.html.twig', array('form' => $form->createView(), 'result' => $result));
