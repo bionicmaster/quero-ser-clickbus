@@ -37,6 +37,16 @@ class GroupByRangeManager
         return $this->all($array, 'is_int');
     }
 
+    public function convertInteger(Array $array)
+    {
+        foreach($array as $key => $value)
+        {
+            if(is_numeric(trim($value)))
+                $array[$key] = intval(trim($value));
+        }
+        return $array;
+    }
+
     public function all(Array $array, $predicate)
     {
         return array_filter($array, $predicate) === $array;
@@ -44,6 +54,7 @@ class GroupByRangeManager
 
     public function sort_and_group(Array $array, $range)
     {
+        $array = $this->convertInteger($array);
         if($this->isInteger($array))
         {
             $this->sorted = $this->sorter->sort($array);

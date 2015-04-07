@@ -17,12 +17,14 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
 
+        // Creamos el formulario de entrada
         $form = $this->createFormBuilder()
             ->add('arreglo', 'textarea')
             ->add('rango', 'number')
             ->getForm();
         $form->handleRequest($request);
 
+        // Inicializamos los valores
         $result = [
             'range_input'    => '',
             'sorted_input'   => '',
@@ -31,18 +33,26 @@ class DefaultController extends Controller
         ];
 
         if ($form->isValid()) {
+            // Si el formulario es correcto
             /** @var  \GroupBundle\GroupByRange\GroupByRangeManager $manager */
             $manager = $this->get('groupbyrange_manager');
+
+            //Obtenemos los datos
             $data = $form->getData();
-            $manager->sort_and_group(array_map('intval', explode(',', trim($data['arreglo']))), $data['rango']);
+
+            //E invocamos a los servicios, con los valores correctos y limpios
+            $manager->sort_and_group(explode(',', trim($data['arreglo'])), $data['rango']);
             $grouped = $manager->getGrouped();
 
             $set = [];
+
+            // Agrupamos los valores, para que se vean en formato de presentacion
             foreach($grouped as $group)
             {
                 $set[] = '[' . implode(',', $group) . ']';
             }
 
+            // Asignamos los valores obtenidos en los requests para ponerse en la vista
             $result['range_input']   = $data['rango'];
             $result['sorted_input']  = $data['arreglo'];
             $result['sorted_output'] = implode(', ', $manager->getSorted());
